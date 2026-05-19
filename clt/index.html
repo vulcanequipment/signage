@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Centered Countdown</title>
+    <style>
+        body {
+            background-image: url(SafeBG_2.png);
+            background-repeat: no-repeat;
+            background-color: black;
+            width: 550px; /* Note: This width will constrain the body, but absolute positioning will override it. */
+            height: 745px;
+            text-align: center;
+            font-family: ubuntu-mono, sans-serif;
+            font-size: 330px;
+            font-style: inherit;
+        }
+
+        #top_pad {
+            height: 900px;
+        }
+
+        /* Use absolute positioning to place the div at the desired location */
+        #DaysSince {
+            position: absolute;
+            left: 1080px;
+            top: 900px; /* Adjust this value if needed to align with top_pad */
+            transform: translateX(-50%); /* This is the key to centering */
+            font-family: ubuntu-mono, sans-serif;
+            color: #7A0002;
+            text-align: center;
+        }
+
+        #mid_pad {
+            height: 450px;
+        }
+
+        /* Use absolute positioning for the second div as well */
+        #DaysUntil {
+            position: absolute;
+            left: 1080px;
+            top: 1735px; /* Adjust this value based on the position of the previous elements */
+            transform: translateX(-50%); /* Key to centering */
+            font-family: ubuntu-mono, sans-serif;
+            color: #7A0002;
+            text-align: center;
+        }
+    </style>
+
+   
+</head>
+<body>
+
+    <div id="top_pad"></div>
+
+    <div id="DaysSince">
+        <script type="text/javascript">
+            var d1 = new Date();
+            var d2 = new Date('May 7, 2026');
+            var day = 1000 * 60 * 60 * 24;
+            var diff = Math.ceil((d1.getTime() - d2.getTime()) / (day));
+            document.write(diff);
+        </script>
+    </div>
+
+    <div id="mid_pad"></div>
+
+    <div id="DaysUntil">
+        <script type="text/javascript">
+            var d1 = new Date();
+            var d2 = new Date('May 8, 2028');
+            var day = 1000 * 60 * 60 * 24;
+            var diff = Math.ceil((d2.getTime() - d1.getTime()) / (day));
+            document.write(diff);
+        </script>
+    </div>
+
+</body>
+</html>
