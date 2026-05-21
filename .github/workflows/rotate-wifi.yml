@@ -12,9 +12,18 @@ permissions:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    
+    # FORCES THE ENTIRE RUN TO STAY INSIDE YOUR NESTED SIGNAGE DIRECTORY
+    defaults:
+      run:
+        working-directory: signage
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v6
+        with:
+          # Tells the checkout action to pull everything relative to the root first
+          path: '.' 
 
       - name: Set up Python
         uses: actions/setup-python@v6
@@ -25,11 +34,9 @@ jobs:
         env:
           # Pulls your secure encrypted 52-row CSV string from repo secrets
           WIFI_VOUCHERS_RAW: ${{ secrets.WIFI_VOUCHERS }}
-        working-directory: signage # Steps into your nested directory layer first
         run: python generate_wifi.py
 
       - name: Commit and Push index.html
-        working-directory: signage # Executes the git commit from the same directory layer
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
