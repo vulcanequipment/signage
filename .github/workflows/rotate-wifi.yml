@@ -25,7 +25,8 @@ jobs:
         env:
           # Safely inject the encrypted repository secret as a temporary variable
           WIFI_VOUCHERS_RAW: ${{ secrets.WIFI_VOUCHERS }}
-        run: python generate_wifi.py
+       working-directory: signage
+       run: python generate_wifi.py
 
       - name: Commit and Push index.html
         run: |
