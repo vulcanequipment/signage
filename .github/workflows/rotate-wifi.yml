@@ -12,18 +12,9 @@ permissions:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    
-    # FORCES THE ENTIRE RUN TO STAY INSIDE YOUR NESTED SIGNAGE DIRECTORY
-    defaults:
-      run:
-        working-directory: signage
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v6
-        with:
-          # Tells the checkout action to pull everything relative to the root first
-          path: '.' 
 
       - name: Set up Python
         uses: actions/setup-python@v6
@@ -34,12 +25,16 @@ jobs:
         env:
           # Pulls your secure encrypted 52-row CSV string from repo secrets
           WIFI_VOUCHERS_RAW: ${{ secrets.WIFI_VOUCHERS }}
-        run: python generate_wifi.py
+        # Run python by pointing directly to where the script sits
+        run: python signage/generate_wifi.py
 
       - name: Commit and Push index.html
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add wifi/index.html
-          # Checks for modifications to the tracked code, skipping cleanly if identical
+          
+          # Explicitly stage the file inside your nested directory layout
+          git add signage/wifi/index.html
+          
+          # Checks for modifications, skipping cleanly if identical
           git diff-index --quiet HEAD || (git commit -m "Automated Weekly Wi-Fi Refresh" && git push)
