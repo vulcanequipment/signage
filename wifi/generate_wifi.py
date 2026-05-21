@@ -5,21 +5,23 @@ import datetime
 SSID_NAME = "FEG_Guest"
 
 def get_current_voucher():
-    # Grab the raw CSV text from the GitHub environment secret
-    csv_data = os.environ.get("WIFI_VOUCHERS_RAW", "")
+    csv_data = os.environ.get("WIFI_VOUCHERS_RAW", "").strip()
     if not csv_data:
         return "ERROR: Missing Data"
 
-    # Find current week number (1-52)
     current_week = datetime.date.today().isocalendar()[1]
 
-    # Parse the raw string text as a CSV file
-    lines = csv_data.strip().split('\n')
+    # Cleanly filter out accidental empty lines or spaces from the secret block
+    lines = [line.strip() for line in csv_data.split('\n') if line.strip()]
+    
     reader = csv.DictReader(lines)
     
     for row in reader:
-        if int(row['week'].strip()) == current_week:
-            return row['voucher'].strip()
+        try:
+            if int(row['week'].strip()) == current_week:
+                return row['voucher'].strip()
+        except (ValueError, KeyError):
+            continue # Skip corrupted rows cleanly without throwing a hard process error
             
     return "Code Expired"
 
