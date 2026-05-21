@@ -25,16 +25,16 @@ jobs:
         env:
           # Pulls your secure encrypted 52-row CSV string from repo secrets
           WIFI_VOUCHERS_RAW: ${{ secrets.WIFI_VOUCHERS }}
-        # Run python by pointing directly to where the script sits
-        run: python signage/generate_wifi.py
+        # Run python directly at the root workspace layer where generate_wifi.py lives
+        run: python generate_wifi.py
 
       - name: Commit and Push index.html
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           
-          # Explicitly stage the file inside your nested directory layout
-          git add signage/wifi/index.html
+          # Explicitly stage the file inside your wifi directory layout
+          git add wifi/index.html
           
           # Checks for modifications, skipping cleanly if identical
           git diff-index --quiet HEAD || (git commit -m "Automated Weekly Wi-Fi Refresh" && git push)
