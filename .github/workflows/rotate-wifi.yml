@@ -1,3 +1,4 @@
+YAML
 name: Weekly Wi-Fi Rotation
 
 on:
@@ -12,8 +13,9 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
+      # FIX: This tells GitHub to actually pull down your files
       - name: Checkout Code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v6
@@ -23,7 +25,6 @@ jobs:
       - name: Generate Fresh HTML Page
         env:
           WIFI_VOUCHERS_RAW: ${{ secrets.WIFI_VOUCHERS }}
-        # Runs right at the root layer where generate_wifi.py sits
         run: python generate_wifi.py
 
       - name: Commit and Push wifi.html
@@ -31,8 +32,5 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           
-          # Stage the exact file inside your actual subfolder
           git add signage/wifi.html
-          
-          # Commit and push only if the voucher code actually changed
-          git diff-index --quiet HEAD || (git commit -m "Automated Weekly Wi-Fi Refresh" && git push)
+          git diff-index --quiet HEAD || (git commit -m "Automated Weekly Wi-Fi Refresh"
