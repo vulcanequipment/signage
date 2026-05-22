@@ -59,7 +59,7 @@ def build_page(voucher_code):
 </html>"""
 
     # Output to index.html for GitHub Pages to serve
-    with open("wifi/index.html", "w") as f:
+    with open("signage/wifi.html", "w") as f:
         f.write(html_content)
 
 if __name__ == "__main__":
