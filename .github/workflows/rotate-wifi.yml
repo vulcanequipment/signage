@@ -25,7 +25,7 @@ jobs:
       - name: Generate Fresh HTML Page
         env:
           WIFI_VOUCHERS_RAW: ${{ secrets.WIFI_VOUCHERS }}
-        run: python generate_wifi.py
+        run: python wifi/generate_wifi.py
 
       - name: Commit and Push wifi.html
         run: |
