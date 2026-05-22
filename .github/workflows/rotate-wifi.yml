@@ -2,12 +2,11 @@ name: Weekly Wi-Fi Rotation
 
 on:
   schedule:
-    # Runs at 00:00 UTC every Monday morning
     - cron: '0 0 * * 1'
-  workflow_dispatch: # Keeps manual button execution enabled in the UI
+  workflow_dispatch:
 
 permissions:
-  contents: write # Explicitly grants the automated bot permission to push changes
+  contents: write
 
 jobs:
   build-and-deploy:
@@ -23,18 +22,17 @@ jobs:
 
       - name: Generate Fresh HTML Page
         env:
-          # Pulls your secure encrypted 52-row CSV string from repo secrets
           WIFI_VOUCHERS_RAW: ${{ secrets.WIFI_VOUCHERS }}
-        # Run python directly at the root workspace layer where generate_wifi.py lives
+        # Runs right at the root layer where generate_wifi.py sits
         run: python generate_wifi.py
 
-      - name: Commit and Push index.html
+      - name: Commit and Push wifi.html
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           
-          # Explicitly stage the file inside your wifi directory layout
-          git add wifi/index.html
+          # Stage the exact file inside your actual subfolder
+          git add signage/wifi.html
           
-          # Checks for modifications, skipping cleanly if identical
+          # Commit and push only if the voucher code actually changed
           git diff-index --quiet HEAD || (git commit -m "Automated Weekly Wi-Fi Refresh" && git push)
