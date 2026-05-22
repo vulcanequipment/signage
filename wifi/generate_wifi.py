@@ -59,8 +59,11 @@ def build_page(voucher_code):
 </html>"""
 
     # Output to index.html for GitHub Pages to serve
-    with open("signage/wifi.html", "w") as f:
+    output_path = os.path.join(os.path.dirname(__file__), "wifi.html")
+
+    with open(output_path, "w") as f:
         f.write(html_content)
+
 
 if __name__ == "__main__":
     code = get_current_voucher()
