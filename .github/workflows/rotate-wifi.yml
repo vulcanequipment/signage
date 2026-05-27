@@ -40,38 +40,30 @@ jobs:
           node -e "
           const puppeteer = require('puppeteer');
           (async () => {
-            // Bypass Chromium sandbox restrictions and force a 1.25x browser scale factor
             const browser = await puppeteer.launch({ 
               headless: 'new',
-              args: [
-                '--no-sandbox', 
-                '--disable-setuid-sandbox',
-                '--force-device-scale-factor=1.25'
-              ] 
+              args: ['--no-sandbox', '--disable-setuid-sandbox'] 
             });
             const page = await browser.newPage();
             
-            // Set the viewport dimensions with the scale factor applied for a crisp render
-            await page.setViewport({ 
-              width: 960, 
-              height: 540,
-              deviceScaleFactor: 1.25
-            });
+            // Keep the canvas strictly locked to the M5Paper hardware resolution
+            await page.setViewport({ width: 960, height: 540 });
             
-            // Point to the exact workspace location of your freshly compiled HTML
             await page.goto('file://' + process.cwd() + '/wifi/wifi.html', { waitUntil: 'networkidle0' });
             
-            // Inject a top padding override on the fly so the content doesn't collide with the C++ date/battery stamp
-            await page.addStyleTag({ content: 'body { padding-top: 75px !important; box-sizing: border-box !important; }' });
+            // INJECTED FIX: 
+            // 1. Adds a 75px safety cushion at the top for the C++ headers
+            // 2. Shrinks the content height to prevent vertical scrolling
+            // 3. Zooms everything up uniformly by 130% while keeping it perfectly centered
+            await page.addStyleTag({ content: 'body { padding-top: 75px !important; height: 465px !important; box-sizing: border-box !important; transform: scale(1.30) !important; transform-origin: center center !important; }' });
             
-            // Save the screenshot as a clean PNG image file in the same folder
+            // Take the crisp, centered snapshot
             await page.screenshot({ path: 'wifi/display.png', type: 'png' });
             
             await browser.close();
-            console.log('Successfully rendered scaled M5Paper canvas artifact without modifying source HTML.');
+            console.log('Successfully applied local CSS scaling matrix to M5Paper artifact.');
           })();
           "
-
       - name: Commit and Push Assets
         run: |
           git config --global user.name "github-actions[bot]"
