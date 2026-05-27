@@ -1,4 +1,4 @@
-name: Weekly Wi-Fi Rotation
+name: Weekly Wi-Fi Rotation_Formatted
 
 on:
   schedule:
