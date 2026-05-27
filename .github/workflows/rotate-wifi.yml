@@ -27,23 +27,24 @@ jobs:
           WIFI_VOUCHERS_RAW: ${{ secrets.WIFI_VOUCHERS }}
         run: python wifi/generate_wifi.py
 
-      # --- NEW STEP: Set up Node for Puppeteer ---
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      # --- NEW STEP: Install Headless Browser Engine ---
       - name: Install Puppeteer Layout Tools
         run: npm install puppeteer
 
-      # --- NEW STEP: Capture 960x540 M5Paper Screen Artifact ---
       - name: Render E-Ink Layout Image
         run: |
           node -e "
           const puppeteer = require('puppeteer');
           (async () => {
-            const browser = await puppeteer.launch({ headless: 'new' });
+            // Bypass Chromium sandbox restrictions inside container environments
+            const browser = await puppeteer.launch({ 
+              headless: 'new',
+              args: ['--no-sandbox', '--disable-setuid-sandbox'] 
+            });
             const page = await browser.newPage();
             
             // Lock window boundaries to the physical resolution of the M5Paper
@@ -60,7 +61,6 @@ jobs:
           })();
           "
 
-      # --- MODIFIED STEP: Track and Commit both the HTML and PNG assets ---
       - name: Commit and Push Assets
         run: |
           git config --global user.name "github-actions[bot]"
