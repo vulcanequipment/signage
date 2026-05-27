@@ -49,13 +49,13 @@ jobs:
             // Keep the canvas strictly locked to the M5Paper hardware resolution
             await page.setViewport({ width: 960, height: 540 });
             
-            await page.goto('file://' + process.cwd() + '/wifi/wifi.html', { waitUntil: 'networkidle0' });
+            await page.goto('file://' + process.cwd() + '/wifi/wifi2.html', { waitUntil: 'networkidle0' });
             
             // INJECTED FIX: 
             // 1. Adds a 75px safety cushion at the top for the C++ headers
             // 2. Shrinks the content height to prevent vertical scrolling
             // 3. Zooms everything up uniformly by 130% while keeping it perfectly centered
-            await page.addStyleTag({ content: 'body { padding-top: 75px !important; height: 465px !important; box-sizing: border-box !important; transform: scale(1.30) !important; transform-origin: center center !important; }' });
+            await page.addStyleTag({ content: 'body { padding-top: 75px !important; height: 465px !important; box-sizing: border-box !important; transform: scale(1.0) !important; transform-origin: center center !important; }' });
             
             // Take the crisp, centered snapshot
             await page.screenshot({ path: 'wifi/display2.png', type: 'png' });
