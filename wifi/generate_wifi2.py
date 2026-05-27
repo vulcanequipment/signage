@@ -116,7 +116,7 @@ def build_page(voucher_code):
 </html>"""
 
     # Output to a unique file path so we don't clobber the legacy frame layouts
-    output_path = os.path.join(os.path.dirname(__file__), "wifi_flashy.html")
+    output_path = os.path.join(os.path.dirname(__file__), "wifi2.html")
 
     with open(output_path, "w") as f:
         f.write(html_content)
