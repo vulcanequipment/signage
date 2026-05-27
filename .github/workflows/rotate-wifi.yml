@@ -40,24 +40,35 @@ jobs:
           node -e "
           const puppeteer = require('puppeteer');
           (async () => {
-            // Bypass Chromium sandbox restrictions inside container environments
+            // Bypass Chromium sandbox restrictions and force a 1.25x browser scale factor
             const browser = await puppeteer.launch({ 
               headless: 'new',
-              args: ['--no-sandbox', '--disable-setuid-sandbox'] 
+              args: [
+                '--no-sandbox', 
+                '--disable-setuid-sandbox',
+                '--force-device-scale-factor=1.25'
+              ] 
             });
             const page = await browser.newPage();
             
-            // Lock window boundaries to the physical resolution of the M5Paper
-            await page.setViewport({ width: 960, height: 540 });
+            // Set the viewport dimensions with the scale factor applied for a crisp render
+            await page.setViewport({ 
+              width: 960, 
+              height: 540,
+              deviceScaleFactor: 1.25
+            });
             
             // Point to the exact workspace location of your freshly compiled HTML
             await page.goto('file://' + process.cwd() + '/wifi/wifi.html', { waitUntil: 'networkidle0' });
+            
+            // Inject a top padding override on the fly so the content doesn't collide with the C++ date/battery stamp
+            await page.addStyleTag({ content: 'body { padding-top: 75px !important; box-sizing: border-box !important; }' });
             
             // Save the screenshot as a clean PNG image file in the same folder
             await page.screenshot({ path: 'wifi/display.png', type: 'png' });
             
             await browser.close();
-            console.log('Successfully rendered M5Paper canvas artifact.');
+            console.log('Successfully rendered scaled M5Paper canvas artifact without modifying source HTML.');
           })();
           "
 
