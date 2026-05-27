@@ -49,15 +49,13 @@ jobs:
             // Keep the canvas strictly locked to the M5Paper hardware resolution
             await page.setViewport({ width: 960, height: 540 });
             
+            // Pointing to your specific v2 HTML template
             await page.goto('file://' + process.cwd() + '/wifi/wifi2.html', { waitUntil: 'networkidle0' });
             
-            // INJECTED FIX: 
-            // 1. Adds a 75px safety cushion at the top for the C++ headers
-            // 2. Shrinks the content height to prevent vertical scrolling
-            // 3. Zooms everything up uniformly by 130% while keeping it perfectly centered
+            // Injecting the 75px safety cushion layout rules
             await page.addStyleTag({ content: 'body { padding-top: 75px !important; height: 465px !important; box-sizing: border-box !important; transform: scale(1.0) !important; transform-origin: center center !important; }' });
             
-            // Take the crisp, centered snapshot
+            // Outputting exactly to your target display2.png asset path
             await page.screenshot({ path: 'wifi/display2.png', type: 'png' });
             
             await browser.close();
@@ -69,8 +67,8 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           
-          # Track both output files
-          git add wifi/wifi.html
-          git add wifi/display.png
+          # Tracking your specific version 2 outputs
+          git add wifi/wifi2.html
+          git add wifi/display2.png
           
-          git diff-index --quiet HEAD || (git commit -m "Automated Weekly Wi-Fi Refresh and E-Ink Image Update" && git push)
+          git diff-index --quiet HEAD || (git commit -m "Automated Weekly Wi-Fi Refresh and E-Ink Flashy Image Update" && git push)
