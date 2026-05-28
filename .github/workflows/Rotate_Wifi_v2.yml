@@ -25,7 +25,8 @@ jobs:
       - name: Generate Fresh HTML Page
         env:
           WIFI_VOUCHERS_RAW: ${{ secrets.WIFI_VOUCHERS }}
-        run: python wifi/generate_wifi.py
+        # FIXED: Points exactly to your new version 2 Python script file
+        run: python wifi/generate_wifi2.py
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
