@@ -95,7 +95,7 @@ def build_page(voucher_code):
     <div class="container">
         <div class="wifi-line">
             Guest Wi-Fi<br>
-            <span style="font-weight: 400; font-size: 3.2rem; color: #555555;">{SSID_NAME}</span><br>
+            <span style="font-weight: 400; font-size: 3.2rem; color: #555555;">SSID:{SSID_NAME}</span><br>
             <div class="code-highlight">Code: {voucher_code}</div>
         </div>
         
