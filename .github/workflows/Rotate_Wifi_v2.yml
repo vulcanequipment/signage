@@ -67,8 +67,9 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           
-          # Tracking your specific version 2 outputs
-          git add wifi/wifi2.html
-          git add wifi/display2.png
+          # 1. Force stage ONLY the two target layout assets
+          git add -f wifi/wifi2.html
+          git add -f wifi/display2.png
           
-          git diff-index --quiet HEAD || (git commit -m "Automated Weekly Wi-Fi Refresh and E-Ink Flashy Image Update" && git push)
+          # 2. Check for changes strictly within the wifi directory, bypassing node_modules completely
+          git diff --cached --quiet || (git commit -m "Automated Weekly Wi-Fi Refresh and E-In
