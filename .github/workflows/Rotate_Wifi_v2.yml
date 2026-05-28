@@ -72,4 +72,4 @@ jobs:
           git add -f wifi/display2.png
           
           # 2. Check for changes strictly within the wifi directory, bypassing node_modules completely
-          git diff --cached --quiet || (git commit -m "Automated Weekly Wi-Fi Refresh and E-In
+          git diff --cached --quiet || (git commit -m "Automated Weekly Wi-Fi Refresh and E-Ink Flashy Image Update" && git push)
