@@ -45,7 +45,7 @@ def build_page(voucher_code):
             text-align: center;
             overflow: hidden;
             box-sizing: border-box;
-        }
+        }}
 
         /* Inner container that centers everything and scales neatly */
         .container {{
@@ -57,7 +57,7 @@ def build_page(voucher_code):
             height: 100%;
             padding-top: 50px; /* Leaves room for top header text overlays */
             box-sizing: border-box;
-        }
+        }}
 
         /* Large, prominent credentials layout */
         .wifi-line {{ 
