@@ -6,8 +6,9 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             font-weight: 900;
-            background-color: #111111; /* Sleek dark frame backdrop */
-            color: #FFFFFF;           /* High contrast text */
+            /* Light gray background for better e-ink contrast */
+            background-color: #EAEAEA; 
+            color: #111111; 
             margin: 0;
             padding: 0;
             display: flex;
@@ -19,7 +20,6 @@
             box-sizing: border-box;
         }
 
-        /* Inner container that centers everything and scales neatly */
         .container {
             display: flex;
             flex-direction: column;
@@ -27,11 +27,10 @@
             align-items: center;
             width: 100%;
             height: 100%;
-            padding-top: 50px; /* Leaves room for top header text overlays */
+            padding-top: 50px;
             box-sizing: border-box;
         }
 
-        /* Large, prominent credentials layout */
         .wifi-line { 
             font-size: 4.2rem; 
             line-height: 1.4; 
@@ -39,44 +38,36 @@
             margin-bottom: 25px;
         }
 
-        /* Clean highlight variation for the actual access code */
+        /* Dark box to make the voucher code pop against the light gray background */
         .code-highlight {
             color: #FFFFFF;
             background-color: #222222;
-            padding: 4px 20px;
-            border-radius: 8px;
-            border: 2px solid #444444;
+            padding: 8px 25px;
+            border-radius: 12px;
             display: inline-block;
-            margin-top: 10px;
+            margin-top: 15px;
         }
 
-        /* Grounded branding footer zone */
         .logo-footer {
-            margin-top: 10px;
+            margin-top: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        /* Explicit sizing constraints for the raw transparent PNG asset */
         .logo-img {
             height: 110px;
             width: auto;
             object-fit: contain;
-            /* Subtle image filtering trick to make the dark gray Vulcan text pop against dark themes */
-            filter: brightness(1.4); 
+            /* Logo looks best as-is, remove brightness filter for standard icon */
         }
     </style>
-    <script>
-        // Force frame refresh every 6 hours
-        setInterval(function() { window.location.reload(); }, 21600000);
-    </script>
 </head>
 <body>
     <div class="container">
         <div class="wifi-line">
             Guest Wi-Fi<br>
-            <span style="font-weight: 400; font-size: 3.2rem; color: #AAAAAA;">FEG_Guest</span><br>
+            <span style="font-weight: 400; font-size: 3.2rem; color: #555555;">FEG_Guest</span><br>
             <div class="code-highlight">Code: 27425-12234</div>
         </div>
         
