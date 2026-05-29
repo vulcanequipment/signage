@@ -5,6 +5,20 @@
 <title>Safety Board</title>
 
 <style>
+    /* =========================================
+       GLOBAL 7-SEGMENT FONT
+       Root-relative path so all signage pages can use it
+    ========================================= */
+    @font-face {
+        font-family: "SafetyLED";
+        src:
+            url("/signage/fonts/DSEG7Classic-Bold.woff2") format("woff2"),
+            url("/signage/fonts/DSEG7Classic-Bold.ttf") format("truetype");
+        font-weight: normal;
+        font-style: normal;
+        font-display: swap;
+    }
+
     html, body {
         margin: 0;
         padding: 0;
@@ -18,47 +32,63 @@
         align-items: center;
     }
 
-    /* Outer wrapper gets uniformly scaled */
+    /* =========================================
+       SCALED WRAPPER
+    ========================================= */
     #scale-wrapper {
         transform-origin: center center;
     }
 
-    /* Fixed design canvas: MUST match actual BG image dimensions */
+    /* =========================================
+       FIXED DESIGN CANVAS
+       MUST MATCH ACTUAL BG IMAGE DIMENSIONS
+    ========================================= */
     #board {
         position: relative;
         width: 1564px;
         height: 2048px;
-
         background-repeat: no-repeat;
         background-position: center center;
         background-size: 100% 100%;
     }
 
+    /* =========================================
+       LED COUNTER STYLE
+    ========================================= */
     .counter {
         position: absolute;
-
-        /* precise center based on actual black panel center */
-        left: 49.2%;
         transform: translate(-50%, -50%);
-
-        font-family: ubuntu-mono, sans-serif;
-        font-weight: normal;
-        font-style: normal;
-        font-size: 165px;
-        line-height: 1;
-        color: #7A0002;
-        text-align: center;
-        white-space: nowrap;
         margin: 0;
         padding: 0;
+
+        font-family: "SafetyLED", "Courier New", monospace;
+        font-size: 170px;
+        line-height: 1;
+        letter-spacing: 4px;
+        white-space: nowrap;
+        text-align: center;
+
+        color: #D60000;
+
+        /* LED glow */
+        text-shadow:
+            0 0 3px rgba(214, 0, 0, 0.85),
+            0 0 6px rgba(214, 0, 0, 0.65),
+            0 0 12px rgba(214, 0, 0, 0.45),
+            0 0 20px rgba(214, 0, 0, 0.30);
     }
 
-    /* Centers derived from the actual uploaded background image */
+    /*
+      These values are calibrated to your uploaded background image.
+      Fine tune if needed depending on how this specific font renders.
+    */
     #DaysSince {
+        left: 49.2%;
         top: 37.9%;
     }
 
     #DaysUntil {
+        left: 49.2%;
         top: 66.5%;
     }
 </style>
@@ -74,8 +104,8 @@
 
 <script>
 /* =========================================
-   CONFIGURATION VARIABLES
-   Edit these only
+   CONFIGURATION
+   Edit only this section
 ========================================= */
 const CONFIG = {
     backgroundImage: "SafeBG_2.png",
@@ -83,14 +113,13 @@ const CONFIG = {
     sinceDate: "May 7, 2026",
     untilDate: "Apr 25, 2028",
 
-    textColor: "#7A0002",
-    fontSize: "165px",
-
-    /* match actual background image dimensions */
     boardWidth: 1564,
     boardHeight: 2048,
 
-    /* panel centers from actual image */
+    textColor: "#D60000",
+    fontSize: "170px",
+
+    /* Fine tune if needed */
     daysSinceLeft: "49.2%",
     daysSinceTop: "37.9%",
 
@@ -99,26 +128,32 @@ const CONFIG = {
 };
 
 /* =========================================
-   APPLY CONFIG
+   ELEMENT REFERENCES
 ========================================= */
 const board = document.getElementById("board");
+const scaleWrapper = document.getElementById("scale-wrapper");
 const daysSinceEl = document.getElementById("DaysSince");
 const daysUntilEl = document.getElementById("DaysUntil");
 
-board.style.width = CONFIG.boardWidth + "px";
-board.style.height = CONFIG.boardHeight + "px";
-board.style.backgroundImage = `url('${CONFIG.backgroundImage}')`;
+/* =========================================
+   APPLY CONFIG
+========================================= */
+function applyConfig() {
+    board.style.width = CONFIG.boardWidth + "px";
+    board.style.height = CONFIG.boardHeight + "px";
+    board.style.backgroundImage = `url('${CONFIG.backgroundImage}')`;
 
-[daysSinceEl, daysUntilEl].forEach(el => {
-    el.style.color = CONFIG.textColor;
-    el.style.fontSize = CONFIG.fontSize;
-});
+    [daysSinceEl, daysUntilEl].forEach(el => {
+        el.style.color = CONFIG.textColor;
+        el.style.fontSize = CONFIG.fontSize;
+    });
 
-daysSinceEl.style.left = CONFIG.daysSinceLeft;
-daysSinceEl.style.top = CONFIG.daysSinceTop;
+    daysSinceEl.style.left = CONFIG.daysSinceLeft;
+    daysSinceEl.style.top = CONFIG.daysSinceTop;
 
-daysUntilEl.style.left = CONFIG.daysUntilLeft;
-daysUntilEl.style.top = CONFIG.daysUntilTop;
+    daysUntilEl.style.left = CONFIG.daysUntilLeft;
+    daysUntilEl.style.top = CONFIG.daysUntilTop;
+}
 
 /* =========================================
    COUNTER LOGIC
@@ -138,20 +173,20 @@ function updateCounters() {
 }
 
 /* =========================================
-   SCALE TO FIT AVAILABLE SPACE
-   Uniform scaling preserves aspect ratio
+   SCALE TO FIT WHILE PRESERVING ASPECT RATIO
 ========================================= */
 function scaleBoard() {
     const scaleX = window.innerWidth / CONFIG.boardWidth;
     const scaleY = window.innerHeight / CONFIG.boardHeight;
     const scale = Math.min(scaleX, scaleY);
 
-    document.getElementById("scale-wrapper").style.transform = `scale(${scale})`;
+    scaleWrapper.style.transform = `scale(${scale})`;
 }
 
 /* =========================================
    INIT
 ========================================= */
+applyConfig();
 updateCounters();
 scaleBoard();
 
