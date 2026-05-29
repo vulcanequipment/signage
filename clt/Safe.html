@@ -1,0 +1,150 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Safety Board</title>
+
+<style>
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background-color: black;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+/* SCALE CONTAINER */
+#scale-wrapper {
+    transform-origin: center center;
+}
+
+/* BOARD (background now controlled via variable in JS) */
+#board {
+    position: relative;
+    width: 2160px;   /* match image */
+    height: 3840px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+}
+
+/* COUNTER STYLE */
+.counter {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: ubuntu-mono, sans-serif;
+    font-size: 330px;
+    color: #7A0002;
+    text-align: center;
+}
+
+#DaysSince {
+    top: 900px;
+}
+
+#DaysUntil {
+    top: 1735px;
+}
+</style>
+</head>
+
+<body>
+
+<div id="scale-wrapper">
+    <div id="board">
+        <div id="DaysSince" class="counter"></div>
+        <div id="DaysUntil" class="counter"></div>
+    </div>
+</div>
+
+<script>
+/* =========================
+   CONFIG VARIABLES
+========================= */
+
+// Background image
+const CONFIG = {
+    backgroundImage: "SafeBG_2.png",
+
+    // Dates
+    sinceDate: "May 7, 2026",
+    untilDate: "Apr 25, 2028",
+
+    // Optional styling overrides
+    textColor: "#7A0002",
+    fontSize: "330px"
+};
+
+
+/* =========================
+   APPLY CONFIG
+========================= */
+
+// Set background dynamically
+document.getElementById("board").style.backgroundImage =
+    `url('${CONFIG.backgroundImage}')`;
+
+// Apply style overrides (optional)
+document.querySelectorAll(".counter").forEach(el => {
+    el.style.color = CONFIG.textColor;
+    el.style.fontSize = CONFIG.fontSize;
+});
+
+
+/* =========================
+   COUNTER LOGIC
+========================= */
+
+function updateCounters() {
+    const now = new Date();
+
+    const sinceDate = new Date(CONFIG.sinceDate);
+    const untilDate = new Date(CONFIG.untilDate);
+
+    const dayMs = 1000 * 60 * 60 * 24;
+
+    const daysSince = Math.ceil((now - sinceDate) / dayMs);
+    const daysUntil = Math.ceil((untilDate - now) / dayMs);
+
+    document.getElementById("DaysSince").textContent = daysSince;
+    document.getElementById("DaysUntil").textContent = daysUntil;
+}
+
+
+/* =========================
+   AUTO SCALING
+========================= */
+
+function scaleBoard() {
+    const board = document.getElementById("board");
+    const wrapper = document.getElementById("scale-wrapper");
+
+    const scaleX = window.innerWidth / board.offsetWidth;
+    const scaleY = window.innerHeight / board.offsetHeight;
+
+    const scale = Math.min(scaleX, scaleY);
+
+    wrapper.style.transform = `scale(${scale})`;
+}
+
+
+/* =========================
+   INIT
+========================= */
+
+updateCounters();
+scaleBoard();
+
+setInterval(updateCounters, 60000);
+window.addEventListener("resize", scaleBoard);
+
+</script>
+
+</body>
+</html>
