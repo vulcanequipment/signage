@@ -5,132 +5,158 @@
 <title>Safety Board</title>
 
 <style>
-html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    background-color: black;
+    html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        background: black;
+        overflow: hidden;
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-}
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
-/* SCALE WRAPPER */
-#scale-wrapper {
-    transform-origin: center center;
-}
+    /* Outer wrapper gets uniformly scaled */
+    #scale-wrapper {
+        transform-origin: center center;
+    }
 
-/* FIXED CANVAS */
-#board {
-    position: relative;
-    width: 2160px;   /* match your image's true size */
-    height: 3840px;
+    /* Fixed design canvas: MUST match actual BG image dimensions */
+    #board {
+        position: relative;
+        width: 1564px;
+        height: 2048px;
 
-    background-repeat: no-repeat;
-    background-size: 100% 100%;  /* CRITICAL FIX */
-    background-position: center;
-}
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: 100% 100%;
+    }
 
-/* COUNTERS */
-.counter {
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%, -50%); /* center both axes */
+    .counter {
+        position: absolute;
 
-    font-family: ubuntu-mono, sans-serif;
-    font-size: 330px;
-    color: #7A0002;
-    text-align: center;
-    white-space: nowrap;
-}
+        /* precise center based on actual black panel center */
+        left: 49.2%;
+        transform: translate(-50%, -50%);
 
-/* ✅ CALIBRATED TO YOUR IMAGE */
-#DaysSince {
-    top: 31.5%;
-}
+        font-family: ubuntu-mono, sans-serif;
+        font-weight: normal;
+        font-style: normal;
+        font-size: 165px;
+        line-height: 1;
+        color: #7A0002;
+        text-align: center;
+        white-space: nowrap;
+        margin: 0;
+        padding: 0;
+    }
 
-#DaysUntil {
-    top: 56.5%;
-}
+    /* Centers derived from the actual uploaded background image */
+    #DaysSince {
+        top: 37.9%;
+    }
+
+    #DaysUntil {
+        top: 66.5%;
+    }
 </style>
 </head>
 
 <body>
-
-<div id="scale-wrapper">
-    <div id="board">
-        <div id="DaysSince" class="counter"></div>
-        <div id="DaysUntil" class="counter"></div>
+    <div id="scale-wrapper">
+        <div id="board">
+            <div id="DaysSince" class="counter"></div>
+            <div id="DaysUntil" class="counter"></div>
+        </div>
     </div>
-</div>
 
 <script>
-/* =========================
-   CONFIG (EDIT ONLY HERE)
-========================= */
+/* =========================================
+   CONFIGURATION VARIABLES
+   Edit these only
+========================================= */
 const CONFIG = {
     backgroundImage: "SafeBG_2.png",
+
     sinceDate: "May 7, 2026",
     untilDate: "Apr 25, 2028",
+
     textColor: "#7A0002",
-    fontSize: "330px"
+    fontSize: "165px",
+
+    /* match actual background image dimensions */
+    boardWidth: 1564,
+    boardHeight: 2048,
+
+    /* panel centers from actual image */
+    daysSinceLeft: "49.2%",
+    daysSinceTop: "37.9%",
+
+    daysUntilLeft: "49.2%",
+    daysUntilTop: "66.5%"
 };
 
-/* =========================
+/* =========================================
    APPLY CONFIG
-========================= */
+========================================= */
 const board = document.getElementById("board");
+const daysSinceEl = document.getElementById("DaysSince");
+const daysUntilEl = document.getElementById("DaysUntil");
 
+board.style.width = CONFIG.boardWidth + "px";
+board.style.height = CONFIG.boardHeight + "px";
 board.style.backgroundImage = `url('${CONFIG.backgroundImage}')`;
 
-document.querySelectorAll(".counter").forEach(el => {
+[daysSinceEl, daysUntilEl].forEach(el => {
     el.style.color = CONFIG.textColor;
     el.style.fontSize = CONFIG.fontSize;
 });
 
-/* =========================
-   COUNTERS
-========================= */
+daysSinceEl.style.left = CONFIG.daysSinceLeft;
+daysSinceEl.style.top = CONFIG.daysSinceTop;
+
+daysUntilEl.style.left = CONFIG.daysUntilLeft;
+daysUntilEl.style.top = CONFIG.daysUntilTop;
+
+/* =========================================
+   COUNTER LOGIC
+========================================= */
 function updateCounters() {
     const now = new Date();
-
     const sinceDate = new Date(CONFIG.sinceDate);
     const untilDate = new Date(CONFIG.untilDate);
 
     const dayMs = 1000 * 60 * 60 * 24;
 
-    const daysSince = Math.ceil((now - sinceDate) / dayMs);
-    const daysUntil = Math.ceil((untilDate - now) / dayMs);
+    const daysSince = Math.ceil((now.getTime() - sinceDate.getTime()) / dayMs);
+    const daysUntil = Math.ceil((untilDate.getTime() - now.getTime()) / dayMs);
 
-    document.getElementById("DaysSince").textContent = daysSince;
-    document.getElementById("DaysUntil").textContent = daysUntil;
+    daysSinceEl.textContent = daysSince;
+    daysUntilEl.textContent = daysUntil;
 }
 
-/* =========================
-   AUTO SCALE
-========================= */
+/* =========================================
+   SCALE TO FIT AVAILABLE SPACE
+   Uniform scaling preserves aspect ratio
+========================================= */
 function scaleBoard() {
-    const scaleX = window.innerWidth / board.offsetWidth;
-    const scaleY = window.innerHeight / board.offsetHeight;
-
+    const scaleX = window.innerWidth / CONFIG.boardWidth;
+    const scaleY = window.innerHeight / CONFIG.boardHeight;
     const scale = Math.min(scaleX, scaleY);
 
     document.getElementById("scale-wrapper").style.transform = `scale(${scale})`;
 }
 
-/* =========================
+/* =========================================
    INIT
-========================= */
+========================================= */
 updateCounters();
 scaleBoard();
 
 setInterval(updateCounters, 60000);
 window.addEventListener("resize", scaleBoard);
-
 </script>
-
 </body>
 </html>
-``
