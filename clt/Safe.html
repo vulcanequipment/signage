@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,38 +17,42 @@ html, body {
     overflow: hidden;
 }
 
-/* SCALE CONTAINER */
+/* SCALE WRAPPER */
 #scale-wrapper {
     transform-origin: center center;
 }
 
-/* BOARD (background now controlled via variable in JS) */
+/* FIXED CANVAS */
 #board {
     position: relative;
-    width: 2160px;   /* match image */
+    width: 2160px;   /* match your image's true size */
     height: 3840px;
+
     background-repeat: no-repeat;
-    background-size: contain;
+    background-size: 100% 100%;  /* CRITICAL FIX */
     background-position: center;
 }
 
-/* COUNTER STYLE */
+/* COUNTERS */
 .counter {
     position: absolute;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translate(-50%, -50%); /* center both axes */
+
     font-family: ubuntu-mono, sans-serif;
     font-size: 330px;
     color: #7A0002;
     text-align: center;
+    white-space: nowrap;
 }
 
+/* ✅ CALIBRATED TO YOUR IMAGE */
 #DaysSince {
-    top: 900px;
+    top: 31.5%;
 }
 
 #DaysUntil {
-    top: 1735px;
+    top: 56.5%;
 }
 </style>
 </head>
@@ -65,42 +68,31 @@ html, body {
 
 <script>
 /* =========================
-   CONFIG VARIABLES
+   CONFIG (EDIT ONLY HERE)
 ========================= */
-
-// Background image
 const CONFIG = {
     backgroundImage: "SafeBG_2.png",
-
-    // Dates
     sinceDate: "May 7, 2026",
     untilDate: "Apr 25, 2028",
-
-    // Optional styling overrides
     textColor: "#7A0002",
     fontSize: "330px"
 };
 
-
 /* =========================
    APPLY CONFIG
 ========================= */
+const board = document.getElementById("board");
 
-// Set background dynamically
-document.getElementById("board").style.backgroundImage =
-    `url('${CONFIG.backgroundImage}')`;
+board.style.backgroundImage = `url('${CONFIG.backgroundImage}')`;
 
-// Apply style overrides (optional)
 document.querySelectorAll(".counter").forEach(el => {
     el.style.color = CONFIG.textColor;
     el.style.fontSize = CONFIG.fontSize;
 });
 
-
 /* =========================
-   COUNTER LOGIC
+   COUNTERS
 ========================= */
-
 function updateCounters() {
     const now = new Date();
 
@@ -116,28 +108,21 @@ function updateCounters() {
     document.getElementById("DaysUntil").textContent = daysUntil;
 }
 
-
 /* =========================
-   AUTO SCALING
+   AUTO SCALE
 ========================= */
-
 function scaleBoard() {
-    const board = document.getElementById("board");
-    const wrapper = document.getElementById("scale-wrapper");
-
     const scaleX = window.innerWidth / board.offsetWidth;
     const scaleY = window.innerHeight / board.offsetHeight;
 
     const scale = Math.min(scaleX, scaleY);
 
-    wrapper.style.transform = `scale(${scale})`;
+    document.getElementById("scale-wrapper").style.transform = `scale(${scale})`;
 }
-
 
 /* =========================
    INIT
 ========================= */
-
 updateCounters();
 scaleBoard();
 
@@ -148,3 +133,4 @@ window.addEventListener("resize", scaleBoard);
 
 </body>
 </html>
+``
