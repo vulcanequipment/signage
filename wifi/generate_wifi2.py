@@ -69,7 +69,7 @@ def build_page(voucher_code):
         /* Dark box to make the voucher code pop against the light gray background */
         .code-highlight {{
             color: #FFFFFF;
-            background-color: #222222;
+            background-color: #000000;
             padding: 8px 25px;
             border-radius: 12px;
             display: inline-block;
